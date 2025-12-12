@@ -26,6 +26,25 @@ const largestCountyMap: { [key: string]: string } = {
   'Dâmbovita_Arges_Vâlcea_Prahova': 'Arges'
 };
 
+// Mapping of county names to their 2-letter abbreviations
+const countyAbbreviationMap: { [key: string]: string } = {
+  'Timis': 'TM',
+  'Cluj': 'CJ',
+  'Maramures': 'MM',
+  'Suceava': 'SV',
+  'Iasi': 'IS',
+  'Bacau': 'BC',
+  'Galati': 'GL',
+  'Buzau': 'BZ',
+  'Constanta': 'CT',
+  'Ialomita': 'IL',
+  'Bucharest': 'B',
+  'Dolj': 'DJ',
+  'Brasov': 'BV',
+  'Mures': 'MS',
+  'Arges': 'AG'
+};
+
 type Color = {
   color: string;
   base: boolean;
@@ -227,53 +246,64 @@ function MapView() {
             );
           })}
           {paths.map(({ textPosition, name }, index) => {
-            return textPosition && (colors[index].color !== '#C1C1C1') ? (
+            if (!textPosition) return null;
+            
+            return (
               <g key={`icon-text-${index}`}>
-                {colors[index].base ? (
-                  <image
-                    href={baseSvg}
-                    x={textPosition.x - 15}
-                    y={textPosition.y - 35}
-                    width="30"
-                    height="30"
-                    pointerEvents="none"
-                  />
-                ) :
-                  <image
-                    href={soldierSvg}
-                    x={textPosition.x - 15}
-                    y={textPosition.y - 35}
-                    width="25"
-                    height="25"
-                    pointerEvents="none"
-                  />}
+                {/* County abbreviation - always displayed */}
                 <text
                   x={textPosition.x}
                   y={textPosition.y - 15}
                   textAnchor="middle"
                   dominantBaseline="middle"
                   fill="#000000"
-                  fontSize="18"
+                  fontSize="28"
                   fontFamily='Copperplate'
                   fontWeight="bold"
+                  stroke="#ffffff"
+                  strokeWidth="0.8"
+                  paintOrder="stroke fill"
                 >
-                  {largestCountyMap[name] || name.split('_')[0]}
+                  {countyAbbreviationMap[largestCountyMap[name] || name.split('_')[0]] || largestCountyMap[name] || name.split('_')[0]}
                 </text>
-                <text
-                  x={textPosition.x}
-                  y={textPosition.y}
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fill="#000000"
-                  fontSize="20"
-                  fontFamily='Copperplate'
-                  fontWeight="bold"
-                  pointerEvents="none"
-                >
-                  {landValues[index]}
-                </text>
+                {/* Icons and score - only displayed when territory is occupied */}
+                {colors[index].color !== '#C1C1C1' && (
+                  <>
+                    {colors[index].base ? (
+                      <image
+                        href={baseSvg}
+                        x={textPosition.x - 15}
+                        y={textPosition.y - 50}
+                        width="30"
+                        height="30"
+                        pointerEvents="none"
+                      />
+                    ) :
+                      <image
+                        href={soldierSvg}
+                        x={textPosition.x - 15}
+                        y={textPosition.y - 50}
+                        width="25"
+                        height="25"
+                        pointerEvents="none"
+                      />}
+                    <text
+                      x={textPosition.x}
+                      y={textPosition.y}
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fill="#000000"
+                      fontSize="20"
+                      fontFamily='Copperplate'
+                      fontWeight="bold"
+                      pointerEvents="none"
+                    >
+                      {landValues[index]}
+                    </text>
+                  </>
+                )}
               </g>
-            ) : null
+            );
           })}
         </g>
       </svg>
