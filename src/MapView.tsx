@@ -201,7 +201,7 @@ function MapView() {
       left: 0,
       overflow: 'hidden'
     }}>
-      <div style={{ position: 'absolute', right: 0, zIndex: 10 }}>
+      <div style={{ position: 'absolute', right: 40, zIndex: 10 }}>
         <div style={{ border: activeColor.color === redTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: redTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })} />
         <div style={{ border: activeColor.color === greenTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: greenTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: greenTeamColor, base: false })} />
         <div style={{ border: activeColor.color === blueTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: blueTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: blueTeamColor, base: false })} />
@@ -210,7 +210,7 @@ function MapView() {
       {/* Vertical line with 6 sections */}
       <div style={{
         position: 'absolute',
-        right: 30,
+        right: 40,
         top: '50%',
         transform: 'translateY(-50%)',
         display: 'flex',
