@@ -31,8 +31,9 @@ function ChoiceQuestionLayout({ question, onNextQuestion }: { question: Question
                 <div className="question-layout">
                     <h1 className="question-title">{question.title}</h1>
                     <div className="question-options">
-                        {question.options.map((option) => (
+                        {question.options.map((option, index) => (
                             <div key={option} className="question-option">
+                                <span className="option-letter">{String.fromCharCode(65 + index)}</span>
                                 <p>{option}</p>
                             </div>
                         ))}
@@ -44,8 +45,9 @@ function ChoiceQuestionLayout({ question, onNextQuestion }: { question: Question
                 <div className="question-layout">
                     <h1 className="question-title">{question.title}</h1>
                     <div className="question-options">
-                        {question.options.map((option) => (
+                        {question.options.map((option, index) => (
                             <div key={option} className="question-option" style={{ backgroundColor: option === question.answer ? 'green' : undefined }}>
+                                <span className="option-letter" style={{ color: option === question.answer ? 'white' : undefined }}>{String.fromCharCode(65 + index)}</span>
                                 <p style={{ color: option === question.answer ? 'white' : undefined }}>{option}</p>
                             </div>
                         ))}

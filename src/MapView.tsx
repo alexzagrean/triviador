@@ -7,6 +7,25 @@ import soldierSvg from './soldier.svg';
 import baseSvg from './base.svg';
 import wallpaper from './final.jpeg';
 
+// Mapping of region names to their largest county
+const largestCountyMap: { [key: string]: string } = {
+  'Arad_Timis_Caras-Severin': 'Timis',
+  'Bihor_Cluj_Salaj': 'Cluj',
+  'Satu Mare_Maramures_Bistrita-Nasaud': 'Maramures',
+  'Botosani_Suceava': 'Suceava',
+  'Iasi_Neamt': 'Iasi',
+  'Vaslui_Bacau': 'Bacau',
+  'Galati_Vrancea': 'Galati',
+  'Buzau_Braila': 'Buzau',
+  'Constanta_Tulcea': 'Constanta',
+  'Calarasi_Ialomita': 'Ialomita',
+  'Teleorman_Giurgiu_Ilfov_Bucharest': 'Bucharest',
+  'Mehedinti_Dolj_Olt_Gorj': 'Dolj',
+  'Hunedoara_Brasov_Sibiu_Alba': 'Brasov',
+  'Covasna_Mures_Harghita': 'Mures',
+  'Dâmbovita_Arges_Vâlcea_Prahova': 'Arges'
+};
+
 type Color = {
   color: string;
   base: boolean;
@@ -143,8 +162,12 @@ function MapView() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      minHeight: '100vh',
-      width: '100%'
+      width: '100vw',
+      height: '100vh',
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      overflow: 'hidden'
     }}>
       <div style={{ position: 'absolute', right: 0 }}>
         <div style={{ border: activeColor.color === redTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: redTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })} />
@@ -163,7 +186,23 @@ function MapView() {
         </div>
       </div>
 
-      <svg baseProfile="tiny" height={window.innerHeight} stroke="#ffffff" strokeLinecap="round" strokeLinejoin="round" strokeWidth=".5" version="1.2" viewBox="0 0 1000 704" width={window.innerWidth} xmlns="http://www.w3.org/2000/svg">
+      <svg 
+        baseProfile="tiny" 
+        stroke="#ffffff" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth=".5" 
+        version="1.2" 
+        viewBox="0 0 1000 704" 
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }}
+        preserveAspectRatio="xMidYMid meet"
+        xmlns="http://www.w3.org/2000/svg">
         <g id="features" onMouseLeave={() => setAreaOver(null)} >
           {paths.map(({ d, name, id, stroke, textPosition }, index) => {
             const centerX = textPosition?.x ?? 500;
@@ -187,7 +226,7 @@ function MapView() {
               </g>
             );
           })}
-          {paths.map(({ textPosition }, index) => {
+          {paths.map(({ textPosition, name }, index) => {
             return textPosition && (colors[index].color !== '#C1C1C1') ? (
               <g key={`icon-text-${index}`}>
                 {colors[index].base ? (
@@ -208,6 +247,18 @@ function MapView() {
                     height="25"
                     pointerEvents="none"
                   />}
+                <text
+                  x={textPosition.x}
+                  y={textPosition.y - 15}
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fill="#000000"
+                  fontSize="18"
+                  fontFamily='Copperplate'
+                  fontWeight="bold"
+                >
+                  {largestCountyMap[name] || name.split('_')[0]}
+                </text>
                 <text
                   x={textPosition.x}
                   y={textPosition.y}
