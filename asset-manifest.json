@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/triviador/static/css/main.0fd54a4d.css",
+    "main.js": "/triviador/static/js/main.fec28dd2.js",
+    "static/js/453.cdb36807.chunk.js": "/triviador/static/js/453.cdb36807.chunk.js",
+    "static/media/wallpaper.jpg": "/triviador/static/media/wallpaper.a12064ac87660d7b7b30.jpg",
+    "static/media/soldier.svg": "/triviador/static/media/soldier.d08c28daae92ca468477a818e782d3a6.svg",
+    "static/media/base.svg": "/triviador/static/media/base.d8f83266601a457c6fba010eeeb13649.svg",
+    "index.html": "/triviador/index.html",
+    "main.0fd54a4d.css.map": "/triviador/static/css/main.0fd54a4d.css.map",
+    "main.fec28dd2.js.map": "/triviador/static/js/main.fec28dd2.js.map",
+    "453.cdb36807.chunk.js.map": "/triviador/static/js/453.cdb36807.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0fd54a4d.css",
+    "static/js/main.fec28dd2.js"
+  ]
+}
