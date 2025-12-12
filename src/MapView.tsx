@@ -210,7 +210,7 @@ function MapView() {
       {/* Vertical line with 6 sections */}
       <div style={{
         position: 'absolute',
-        right: 20,
+        right: 30,
         top: '50%',
         transform: 'translateY(-50%)',
         display: 'flex',
@@ -332,7 +332,7 @@ function MapView() {
                       <image
                         href={baseSvg}
                         x={textPosition.x - 15}
-                        y={textPosition.y - 50}
+                        y={textPosition.y - 58}
                         width="30"
                         height="30"
                         pointerEvents="none"
@@ -341,7 +341,7 @@ function MapView() {
                       <image
                         href={soldierSvg}
                         x={textPosition.x - 15}
-                        y={textPosition.y - 50}
+                        y={textPosition.y - 58}
                         width="25"
                         height="25"
                         pointerEvents="none"
