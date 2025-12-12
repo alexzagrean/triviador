@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { paths } from './paths';
 import { blueTeamColor, defaultColors, defaultLandValues, greenTeamColor, mapColorLight1, mapColorLight2, redTeamColor, teamColors } from './consts';
 import soldierSvg from './soldier.svg';
 import baseSvg from './base.svg';
-import wallpaper from './wallpaper.jpg';
+import wallpaper from './final.jpeg';
 
 type Color = {
   color: string;
@@ -12,6 +13,7 @@ type Color = {
 }
 
 function MapView() {
+  const navigate = useNavigate();
   const [areaOver, setAreaOver] = useState<number | null>(null)
   const [colors, setColors] = useState<Color[]>(defaultColors)
   const [landValues, setLandValues] = useState<number[]>(defaultLandValues)
@@ -26,6 +28,43 @@ function MapView() {
     )
     return neighbors;
   })();
+
+  // Method to check if a team has no neighbors that are empty (#C1C1C1)
+  const hasNoEmptyNeighbors = (teamColor: string): boolean => {
+    const emptyColor = '#C1C1C1';
+
+    // Find all areas owned by this team
+    const teamAreas: number[] = [];
+    colors.forEach((color, index) => {
+      if (color.color === teamColor) {
+        teamAreas.push(index);
+      }
+    });
+
+    // If team has no areas, return true (no neighbors to check)
+    if (teamAreas.length === 0) {
+      return true;
+    }
+
+    // Get all unique neighbors of team areas
+    const allNeighbors = new Set<number>();
+    teamAreas.forEach(areaIndex => {
+      paths[areaIndex].neighbours.forEach(neighborIndex => {
+        allNeighbors.add(neighborIndex);
+      });
+    });
+
+    // Check if any neighbor is empty
+    const neighborsArray = Array.from(allNeighbors);
+    for (let i = 0; i < neighborsArray.length; i++) {
+      const neighborIndex = neighborsArray[i];
+      if (colors[neighborIndex]?.color === emptyColor) {
+        return false; // Found an empty neighbor
+      }
+    }
+
+    return true; // No empty neighbors found
+  };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -53,12 +92,12 @@ function MapView() {
   });
 
   const onClick = (color: Color, index: number) => {
-    if (hasBase(color) && !neighbors.includes(index)) {
+    if (hasBase(color) && !neighbors.includes(index) && !hasNoEmptyNeighbors(color.color)) {
       return;
     }
     const newColors = [...colors];
     const newLandValues = [...landValues];
-    if (newColors[index].color !== '#C1C1C1' && newColors[index].color !== color.color) {
+    if (newColors[index].color !== '#C1C1C1' && newColors[index].color !== color.color && newLandValues[index] !== 1000) {
       newLandValues[index] = 400;
     } else {
       if (!colors.find(c => c.color === color.color)) {
@@ -90,8 +129,13 @@ function MapView() {
       }
       return mapColorLight2(activeColor.color);
     }
+    if (hasNoEmptyNeighbors(activeColor.color)) {
+      return mapColorLight2(activeColor.color);
+    }
     return colors[index].color;
   }
+
+  console.log(neighbors)
 
   return (
     <div className="App" style={{
@@ -103,19 +147,19 @@ function MapView() {
       width: '100%'
     }}>
       <div style={{ position: 'absolute', right: 0 }}>
-        <div style={{ border: activeColor.color === redTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: redTeamColor, width: 60, height: 60 }} onClick={() => setActiveColor({ color: redTeamColor, base: false })} />
-        <div style={{ border: activeColor.color === greenTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: greenTeamColor, width: 60, height: 60 }} onClick={() => setActiveColor({ color: greenTeamColor, base: false })} />
-        <div style={{ border: activeColor.color === blueTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: blueTeamColor, width: 60, height: 60 }} onClick={() => setActiveColor({ color: blueTeamColor, base: false })} />
+        <div style={{ border: activeColor.color === redTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: redTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })} />
+        <div style={{ border: activeColor.color === greenTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: greenTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: greenTeamColor, base: false })} />
+        <div style={{ border: activeColor.color === blueTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: blueTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: blueTeamColor, base: false })} />
       </div>
       <div style={{ position: 'absolute', left: 0, display: 'flex', fontSize: 30 }}>
-        <div style={{ cursor: 'pointer', backgroundColor: redTeamColor, width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })}>
+        <div style={{ cursor: 'pointer', backgroundColor: redTeamColor, width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', fontWeight: 'bold', color: '#ffffff' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })}>
           {calculateTeamScore({ color: redTeamColor, base: false })}
         </div>
-        <div style={{ cursor: 'pointer', backgroundColor: greenTeamColor, width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setActiveColor({ color: greenTeamColor, base: false })}>
+        <div style={{ cursor: 'pointer', backgroundColor: greenTeamColor, width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', fontWeight: 'bold', color: '#ffffff' }} onClick={() => setActiveColor({ color: greenTeamColor, base: false })}>
           {calculateTeamScore({ color: greenTeamColor, base: false })}
         </div>
-        <div style={{ cursor: 'pointer', backgroundColor: '#2D69A4', width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => setActiveColor({ color: '#2D69A4', base: false })}>
-          {calculateTeamScore({ color: '#2D69A4', base: false })}
+        <div style={{ cursor: 'pointer', backgroundColor: blueTeamColor, width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', fontWeight: 'bold', color: '#ffffff' }} onClick={() => setActiveColor({ color: '#2D69A4', base: false })}>
+          {calculateTeamScore({ color: blueTeamColor, base: false })}
         </div>
       </div>
 
@@ -182,6 +226,68 @@ function MapView() {
           })}
         </g>
       </svg>
+
+      <button
+        onClick={() => navigate('/question')}
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          left: 20,
+          padding: '16px 32px',
+          fontSize: '20px',
+          fontWeight: 600,
+          color: '#ffffff',
+          background: 'linear-gradient(135deg, #dc2626 0%, #16a34a 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 15px rgba(220, 38, 38, 0.4)',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(22, 163, 74, 0.6)';
+          e.currentTarget.style.background = 'linear-gradient(135deg, #16a34a 0%, #dc2626 100%)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 15px rgba(220, 38, 38, 0.4)';
+          e.currentTarget.style.background = 'linear-gradient(135deg, #dc2626 0%, #16a34a 100%)';
+        }}
+      >
+        Choice
+      </button>
+
+      <button
+        onClick={() => navigate('/numeric-question')}
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          right: 20,
+          padding: '16px 32px',
+          fontSize: '20px',
+          fontWeight: 600,
+          color: '#ffffff',
+          background: 'linear-gradient(135deg, #dc2626 0%, #16a34a 100%)',
+          border: 'none',
+          borderRadius: '12px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 15px rgba(220, 38, 38, 0.4)',
+          transition: 'all 0.3s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(22, 163, 74, 0.6)';
+          e.currentTarget.style.background = 'linear-gradient(135deg, #16a34a 0%, #dc2626 100%)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 15px rgba(220, 38, 38, 0.4)';
+          e.currentTarget.style.background = 'linear-gradient(135deg, #dc2626 0%, #16a34a 100%)';
+        }}
+      >
+        Numeric
+      </button>
     </div>
   );
 }

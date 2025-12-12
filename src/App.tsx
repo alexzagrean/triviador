@@ -5,8 +5,12 @@ import ChoiceQuestion from './ChoiceQuestion';
 import NumericQuestion from './NumericQuestion';
 
 function App() {
+  // Get the basename from the homepage field in package.json
+  // For GitHub Pages, this will be '/triviador'
+  const basename = process.env.PUBLIC_URL || '/triviador';
+  
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<MapView />} />
         <Route path="/question" element={<ChoiceQuestion />} />

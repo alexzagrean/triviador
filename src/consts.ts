@@ -34,17 +34,17 @@ export const defaultLandValues = [
   200,
 ]
 
-export const greenTeamColor = '#2F6030';
+export const greenTeamColor = '#236A4D';
 export const greenTeamColorLight1 = '#5A965C';
 export const greenTeamColorLight2 = '#78B47A';
 
-export const redTeamColor = '#EA4444';
+export const redTeamColor = '#C82817';
 export const redTeamColorLight1 = '#FF7878';
 export const redTeamColorLight2 = '#FF9696';
 
-export const blueTeamColor = '#2D69A4';
-export const blueTeamColorLight1 = '#5A96C8';
-export const blueTeamColorLight2 = '#78B4DC';
+export const blueTeamColor = '#FFBA00';
+export const blueTeamColorLight1 = '#FFD966';
+export const blueTeamColorLight2 = '#FFE699';
 
 export const teamColors = [
   { color: redTeamColor, base: false },
