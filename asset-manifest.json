@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/triviador/static/css/main.d9edf975.css",
-    "main.js": "/triviador/static/js/main.0eee491b.js",
+    "main.js": "/triviador/static/js/main.85cf2d34.js",
     "static/js/453.cdb36807.chunk.js": "/triviador/static/js/453.cdb36807.chunk.js",
     "static/media/final.jpeg": "/triviador/static/media/final.6a57adf886fbb44e5987.jpeg",
     "static/media/soldier.svg": "/triviador/static/media/soldier.d08c28daae92ca468477a818e782d3a6.svg",
     "static/media/base.svg": "/triviador/static/media/base.d8f83266601a457c6fba010eeeb13649.svg",
     "index.html": "/triviador/index.html",
     "main.d9edf975.css.map": "/triviador/static/css/main.d9edf975.css.map",
-    "main.0eee491b.js.map": "/triviador/static/js/main.0eee491b.js.map",
+    "main.85cf2d34.js.map": "/triviador/static/js/main.85cf2d34.js.map",
     "453.cdb36807.chunk.js.map": "/triviador/static/js/453.cdb36807.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.d9edf975.css",
-    "static/js/main.0eee491b.js"
+    "static/js/main.85cf2d34.js"
   ]
 }
