@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
 import { paths } from './paths';
@@ -56,6 +56,7 @@ function MapView() {
   const [colors, setColors] = useState<Color[]>(defaultColors)
   const [landValues, setLandValues] = useState<number[]>(defaultLandValues)
   const [activeColor, setActiveColor] = useState<Color>({ color: redTeamColor, base: false })
+  const [selectedBox, setSelectedBox] = useState<{ sectionIndex: number; colorIndex: number } | null>(null)
   const neighbors = (() => {
     let neighbors: number[] = [];
     colors.forEach((color, index) => {
@@ -129,6 +130,18 @@ function MapView() {
     return colors.some(c => c.color === color.color && c.base);
   });
 
+  // Generate random color orders for 6 sections
+  const colorSections = useMemo(() => {
+    const allColors = [redTeamColor, greenTeamColor, blueTeamColor];
+    const sections = [];
+    for (let i = 0; i < 6; i++) {
+      // Shuffle the colors array
+      const shuffled = [...allColors].sort(() => Math.random() - 0.5);
+      sections.push(shuffled);
+    }
+    return sections;
+  }, []);
+
   const onClick = (color: Color, index: number) => {
     if (hasBase(color) && !neighbors.includes(index) && !hasNoEmptyNeighbors(color.color)) {
       return;
@@ -188,10 +201,55 @@ function MapView() {
       left: 0,
       overflow: 'hidden'
     }}>
-      <div style={{ position: 'absolute', right: 0 }}>
+      <div style={{ position: 'absolute', right: 0, zIndex: 10 }}>
         <div style={{ border: activeColor.color === redTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: redTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })} />
         <div style={{ border: activeColor.color === greenTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: greenTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: greenTeamColor, base: false })} />
         <div style={{ border: activeColor.color === blueTeamColor ? '2px solid #ffffff' : 'none', cursor: 'pointer', backgroundColor: blueTeamColor, width: 60, height: 60, fontSize: '30px' }} onClick={() => setActiveColor({ color: blueTeamColor, base: false })} />
+      </div>
+
+      {/* Vertical line with 6 sections */}
+      <div style={{
+        position: 'absolute',
+        right: 20,
+        top: '50%',
+        transform: 'translateY(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px',
+        alignItems: 'center',
+        zIndex: 10
+      }}>
+        {colorSections.map((sectionColors, sectionIndex) => (
+          <div
+            key={sectionIndex}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px',
+              alignItems: 'center'
+            }}
+          >
+            {sectionColors.map((color, colorIndex) => {
+              const isSelected = selectedBox?.sectionIndex === sectionIndex && selectedBox?.colorIndex === colorIndex;
+              return (
+                <div
+                  key={colorIndex}
+                  onClick={() => setSelectedBox({ sectionIndex, colorIndex })}
+                  style={{
+                    width: '25px',
+                    height: '25px',
+                    backgroundColor: color,
+                    border: isSelected ? '3px solid #ffffff' : '1px solid #ffffff',
+                    borderRadius: '2px',
+                    cursor: 'pointer',
+                    boxShadow: isSelected ? '0 0 8px rgba(255, 255, 255, 0.8)' : 'none',
+                    transition: 'all 0.2s ease'
+                  }}
+                />
+              );
+            })}
+          </div>
+        ))}
       </div>
       <div style={{ position: 'absolute', left: 0, display: 'flex', fontSize: 30 }}>
         <div style={{ cursor: 'pointer', backgroundColor: redTeamColor, width: 300, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '40px', fontWeight: 'bold', color: '#ffffff' }} onClick={() => setActiveColor({ color: redTeamColor, base: false })}>
@@ -218,7 +276,8 @@ function MapView() {
           height: '100%',
           position: 'absolute',
           top: 0,
-          left: 0
+          left: 0,
+          zIndex: 1
         }}
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg">
@@ -323,7 +382,8 @@ function MapView() {
           borderRadius: '12px',
           cursor: 'pointer',
           boxShadow: '0 4px 15px rgba(220, 38, 38, 0.4)',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          zIndex: 10
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-2px)';
@@ -354,7 +414,8 @@ function MapView() {
           borderRadius: '12px',
           cursor: 'pointer',
           boxShadow: '0 4px 15px rgba(220, 38, 38, 0.4)',
-          transition: 'all 0.3s ease'
+          transition: 'all 0.3s ease',
+          zIndex: 10
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-2px)';
